@@ -14,12 +14,17 @@ if (!string.IsNullOrWhiteSpace(keyVaultUri))
 	}
 }
 
-var credential = new DefaultAzureCredential();
+SecretClient? secretClient = null;
 
-var secretClient = new SecretClient(
-    new Uri(keyVaultUri!),
-    credential
-);
+if (!string.IsNullOrWhiteSpace(keyVaultUri))
+{
+	if (!Uri.TryCreate(keyVaultUri, UriKind.Absolute, out var keyVaultEndpoint))
+	{
+		throw new InvalidOperationException("Konfiguracja KeyVault:Uri musi być poprawnym bezwzględnym URI.");
+	}
+
+	secretClient = new SecretClient(keyVaultEndpoint, new DefaultAzureCredential());
+}
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
 	?? throw new InvalidOperationException("Brak konfiguracji ConnectionStrings:DefaultConnection.");
@@ -62,6 +67,11 @@ app.MapGet("/health/db", async (SaveDbContext db, CancellationToken ct) =>
 
 app.MapGet("/health/keyvault", async (CancellationToken ct) =>
 {
+	if (secretClient is null)
+	{
+		return Results.Problem("Key Vault nie jest skonfigurowany.", statusCode: StatusCodes.Status503ServiceUnavailable);
+	}
+
     var secret = await secretClient.GetSecretAsync(
         "ExternalApiKey",
         cancellationToken: ct

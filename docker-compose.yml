@@ -1,7 +1,7 @@
 services:
   api:
     build:
-      context: .
+      context: ./src
       dockerfile: Dockerfile
     environment:
       ASPNETCORE_HTTP_PORTS: "8080"
@@ -15,10 +15,11 @@ services:
 
   migrate:
     build:
-      context: .
+      context: ./src
       dockerfile: Dockerfile
       target: migrations
     profiles: ["migration"]
+    command: ["database", "update"]
     environment:
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=SaveDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Local_dev_Passw0rd!};TrustServerCertificate=True;Encrypt=True"
     depends_on:
