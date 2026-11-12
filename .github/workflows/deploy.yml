@@ -37,3 +37,9 @@ jobs:
 
       - name: Publish
         run: dotnet publish -c Release -o ./publish --no-build
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: web-azure-learning-20261110
+          package: ./publish

@@ -55,6 +55,7 @@ app.MapGet("/health/db", async (SaveDbContext db, CancellationToken ct) =>
 
     return Results.Ok(new
     {
+        version = "1.1",
         database = canConnect ? "connected" : "disconnected"
     });
 });
