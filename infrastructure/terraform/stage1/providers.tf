@@ -5,7 +5,7 @@ terraform {
     use_azuread_auth = true
 
     tenant_id            = "663e9d65-8459-46ae-9360-fd3933eefea3"
-    client_id            = "f605bdd2-cdb5-4ebb-8722-51ea639ecf6f"
+    client_id            = "e01f0406-d7eb-434b-a161-07450465202d"
     storage_account_name = "sttfstate1795708006"
     container_name       = "tfstate"
     key                  = "stage1.tfstate"
