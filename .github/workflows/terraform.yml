@@ -38,4 +38,5 @@ jobs:
         env:
           TF_VAR_external_api_key: ${{ vars.EXTERNAL_API_KEY }}
           TF_VAR_terraform_client_ip: ${{ steps.runner-ip.outputs.ip }}
+          TF_VAR_github_actions_client_id: ${{ secrets.AZURE_CLIENT_ID }}
         run: terraform plan
