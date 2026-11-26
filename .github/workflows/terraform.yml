@@ -22,10 +22,20 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
+      - name: Get runner public IP
+        id: runner-ip
+        run: |
+          ip=$(curl --fail --silent --show-error --ipv4 https://api.ipify.org)
+          ip=$(python3 -c 'import ipaddress, sys; print(ipaddress.IPv4Address(sys.argv[1]))' "$ip")
+          printf 'ip=%s\n' "$ip" >> "$GITHUB_OUTPUT"
+
       - name: Terraform Init
         working-directory: infrastructure/terraform/stage1
         run: terraform init
 
       - name: Terraform Plan
         working-directory: infrastructure/terraform/stage1
+        env:
+          TF_VAR_external_api_key: ${{ vars.EXTERNAL_API_KEY }}
+          TF_VAR_terraform_client_ip: ${{ steps.runner-ip.outputs.ip }}
         run: terraform plan
