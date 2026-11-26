@@ -107,12 +107,6 @@ resource "azurerm_role_assignment" "terraform_secrets_officer" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
-resource "azurerm_role_assignment" "github_keyvault_secrets" {
-  scope                = azurerm_key_vault.learning.id
-  role_definition_name = "Key Vault Secrets Officer"
-  principal_id         = data.azurerm_client_config.current.object_id
-}
-
 # --------------------------------------------------
 # App Service
 # --------------------------------------------------
